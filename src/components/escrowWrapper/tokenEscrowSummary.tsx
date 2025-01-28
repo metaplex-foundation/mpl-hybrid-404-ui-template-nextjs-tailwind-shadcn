@@ -8,6 +8,7 @@ import { Card } from "../ui/card";
 import { Skeleton } from "../ui/skeleton";
 import useEscrowStore from "@/store/useEscrowStore";
 import { formatTokenAmount } from "@/lib/utils";
+import useTokenStore from "@/store/useTokenStore";
 
 const TokenEscrowSummary = () => {
   const escrow = useEscrowStore.getState().escrow;
@@ -16,6 +17,7 @@ const TokenEscrowSummary = () => {
   const [metadata, setMetadata] = useState<Metadata & JsonMetadata>();
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const [error, setError] = useState();
+  const { tokenAsset  } = useTokenStore();
 
   useEffect(() => {
     if (escrow && escrow.token) {
@@ -47,8 +49,8 @@ const TokenEscrowSummary = () => {
         <div>Name: {metadata ? metadata.name : "n/a"}</div>
         <div>
           Balance:{" "}
-          {escrowTokenAccount &&
-            formatTokenAmount(escrowTokenAccount)}
+          {escrowTokenAccount && tokenAsset &&
+            formatTokenAmount(escrowTokenAccount.amount, tokenAsset.token_info.decimals)}
         </div>
       </div>
     </Card>

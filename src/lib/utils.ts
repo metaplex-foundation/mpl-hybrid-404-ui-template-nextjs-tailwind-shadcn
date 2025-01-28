@@ -1,4 +1,3 @@
-import { Token } from "@metaplex-foundation/mpl-toolbox";
 import { publicKey } from "@metaplex-foundation/umi";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -19,20 +18,17 @@ export function cn(...inputs: ClassValue[]) {
  * // Raw amount with 6 decimals
  * formatTokenAmount(1234567890n, 6) // Returns "1,234.567890"
  */
-export function formatTokenAmount(tokenAccountOrAmount: Token | bigint, decimals?: number): string {
-  if (typeof tokenAccountOrAmount === 'bigint' && !decimals) {
-    throw new Error("decimals value is required when passing a raw bigint amount");
-  }
-  const tokenAccount = typeof tokenAccountOrAmount === 'bigint' ? { amount: tokenAccountOrAmount, header: { lamports: { decimals: decimals! } } } : tokenAccountOrAmount;
-  const divisor = BigInt(10 ** tokenAccount.header.lamports.decimals);
+export function formatTokenAmount(tokenAmount: bigint, decimals: number): string {
+  const tokenAccount = { amount: tokenAmount, header: { lamports: { decimals: decimals } } };
+  const divisor = BigInt(10 ** decimals);
   const whole = tokenAccount.amount / divisor;
   const remainder = tokenAccount.amount % divisor;
   
   // Pad remainder with leading zeros to match decimal places
-  const remainderStr = remainder.toString().padStart(tokenAccount.header.lamports.decimals, '0');
+  const remainderStr = remainder.toString().padStart(decimals, '0');
   
   // Remove trailing zeros and add commas for cleaner display
-  const formatted = `${whole.toLocaleString()}.${remainderStr}`.replace(/\.?0+$/, '');
+  const formatted = `${whole.toString()}.${remainderStr}`.replace(/\.?0+$/, '');
   return formatted;
 }
 

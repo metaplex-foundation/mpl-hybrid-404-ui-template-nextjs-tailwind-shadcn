@@ -69,13 +69,10 @@ const NftPicker = ({
       )
     )
     .map((asset) => {
-      const image = asset.content.files
-        ? (asset.content.files[0]["cdn_uri"] as string)
-        : asset.content.links
-        ? (asset.content.links[
-            "image" as keyof typeof asset.content.links
-          ] as unknown as string)
-        : "fallback.png";
+      const image =
+        (asset.content.files?.[0]?.cdn_uri ??
+        (asset.content.links as { image?: string })?.image ??
+        "fallback.png") as string;
 
       return (
         <Card

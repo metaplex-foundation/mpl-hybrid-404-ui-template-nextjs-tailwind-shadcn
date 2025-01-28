@@ -8,7 +8,6 @@ import { useEffect, useState } from "react";
 import { Card } from "../ui/card";
 import { Skeleton } from "../ui/skeleton";
 import { TradeState } from "./swapWrapper";
-import { set } from "@metaplex-foundation/umi/serializers";
 import { formatTokenAmount } from "@/lib/utils";
 
 interface TokenCardProps {
@@ -43,9 +42,9 @@ const TokenCard = (props: TokenCardProps) => {
         <Skeleton className="w-24 h-24 rounded-xl" />
       )}
 
-      {escrow && !loading ? (
+      {escrow && tokenAsset && !loading ? (
         <div className="flex flex-col">
-          {formatTokenAmount(escrow.amount, 9)}{" "}
+          {formatTokenAmount(escrow.amount, tokenAsset.token_info.decimals)}{" "}
           {tokenAsset?.content.metadata.name}
         </div>
       ) : (
